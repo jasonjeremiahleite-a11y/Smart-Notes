@@ -1,36 +1,226 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Smart Notes</title>
-<style>
-body{
-font-family: Arial;
-text-align:center;
-padding:50px;
-background:#0f1623;
-color:white;
-}
-button{
-padding:15px 25px;
-font-size:18px;
-background:gold;
-border:none;
-border-radius:10px;
-cursor:pointer;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Smart Notes & AI Planner</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">Royal Smart Notes & AI Planner</h1>
+            <div class="nav-links">
+                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+                <button class="nav-btn" data-view="notes">Quick Notes</button>
+                <button class="nav-btn" data-view="documents">Documents</button>
+                <button class="nav-btn" data-view="calendar">Calendar</button>
+                <button class="nav-btn" data-view="ai-planner">AI Planner</button>
+                <button class="nav-btn" data-view="archive">Archive</button>
+            </div>
+        </div>
+    </nav>
 
-<h1>Smart Notes</h1>
-<p>Open my Smart Notes App</p>
+    <!-- Dashboard View -->
+    <div id="dashboard" class="view active">
+        <div class="container">
+            <h2 class="page-title">Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="total-notes">0</div>
+                        <div class="stat-label">Total Notes</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="total-docs">0</div>
+                        <div class="stat-label">Total Documents</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="upcoming-tasks">0</div>
+                        <div class="stat-label">Upcoming Tasks</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="overdue-tasks">0</div>
+                        <div class="stat-label">Overdue Tasks</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="completed-tasks">0</div>
+                        <div class="stat-label">Completed Tasks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<button onclick="window.location.href='https://creao-build-studio-production.s3-us-west-2.amazonaws.com/agentapp-static/f89153c0-60e1-702c-fde3-42bb020cf804/pJAGxJqpLh/index.html'">
-Open App
-</button>
+    <!-- Quick Notes View -->
+    <div id="notes" class="view">
+        <div class="container">
+            <h2 class="page-title">Quick Notes</h2>
 
+            <!-- Search and Filter -->
+            <div class="notes-toolbar">
+                <input type="text" id="search-notes" class="search-input" placeholder="Search notes...">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-status="all">All</button>
+                    <button class="filter-btn" data-status="completed">Completed</button>
+                    <button class="filter-btn" data-status="in-progress">In Progress</button>
+                    <button class="filter-btn" data-status="not-started">Not Started</button>
+                    <button class="filter-btn" data-status="high-priority">High Priority</button>
+                    <button class="filter-btn" data-status="easy">Easy</button>
+                </div>
+            </div>
+
+            <!-- Create Note -->
+            <div class="note-create" id="note-create">
+                <div class="note-create-collapsed" id="note-create-collapsed">
+                    <input type="text" placeholder="Take a note..." readonly>
+                </div>
+                <div class="note-create-expanded" id="note-create-expanded" style="display: none;">
+                    <input type="text" class="note-title-input" id="new-note-title" placeholder="Title">
+                    <textarea class="note-content-input" id="new-note-content" placeholder="Take a note..."></textarea>
+
+                    <div class="note-options">
+                        <div class="status-selector">
+                            <button class="status-btn" data-status="not-started" title="Not Started">⚪</button>
+                            <button class="status-btn" data-status="in-progress" title="In Progress">🟢</button>
+                            <button class="status-btn" data-status="high-priority" title="High Priority">🔴</button>
+                            <button class="status-btn" data-status="easy" title="Easy">🟤</button>
+                            <button class="status-btn" data-status="completed" title="Completed">🟡</button>
+                        </div>
+                        <input type="date" id="new-note-date" class="date-picker">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="new-note-checklist"> Checklist Mode
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Grid -->
+            <div class="notes-grid" id="notes-grid"></div>
+        </div>
+    </div>
+
+    <!-- Documents View -->
+    <div id="documents" class="view">
+        <div class="container">
+            <div id="doc-library">
+                <div class="doc-header">
+                    <h2 class="page-title">Documents</h2>
+                    <button class="btn-primary" id="create-doc-btn">+ Create New Document</button>
+                </div>
+                <input type="text" id="search-docs" class="search-input" placeholder="Search documents...">
+                <div class="docs-grid" id="docs-grid"></div>
+            </div>
+
+            <div id="doc-editor" style="display: none;">
+                <div class="editor-header">
+                    <button class="btn-secondary" id="back-to-docs">← Back to Documents</button>
+                    <input type="text" id="doc-title" class="doc-title-input" placeholder="Untitled Document">
+                    <span class="auto-save-indicator" id="save-indicator">Saved</span>
+                </div>
+                <div class="editor-toolbar">
+                    <button class="toolbar-btn" data-command="bold" title="Bold"><strong>B</strong></button>
+                    <button class="toolbar-btn" data-command="italic" title="Italic"><em>I</em></button>
+                    <button class="toolbar-btn" data-command="underline" title="Underline"><u>U</u></button>
+                    <div class="toolbar-divider"></div>
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="h1" title="Heading 1">H1</button>
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="h2" title="Heading 2">H2</button>
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="p" title="Paragraph">P</button>
+                    <div class="toolbar-divider"></div>
+                    <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">• List</button>
+                    <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">1. List</button>
+                </div>
+                <div class="editor-container">
+                    <div id="doc-content" class="doc-content" contenteditable="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div id="calendar" class="view">
+        <div class="container">
+            <h2 class="page-title">Calendar</h2>
+            <div class="calendar-controls">
+                <button class="btn-secondary" id="prev-month">← Previous</button>
+                <h3 id="calendar-month-year"></h3>
+                <button class="btn-secondary" id="next-month">Next →</button>
+            </div>
+            <div class="calendar-view-toggle">
+                <button class="view-toggle-btn active" data-cal-view="month">Month</button>
+                <button class="view-toggle-btn" data-cal-view="week">Week</button>
+            </div>
+            <div id="calendar-display"></div>
+        </div>
+    </div>
+
+    <!-- AI Planner View -->
+    <div id="ai-planner" class="view">
+        <div class="container">
+            <h2 class="page-title">AI Smart Study Planner</h2>
+            <div class="ai-controls">
+                <button class="btn-primary" id="generate-plan">Generate Weekly Plan</button>
+                <div class="last-generated" id="last-generated"></div>
+            </div>
+            <div id="ai-plan-display" class="ai-plan-container"></div>
+        </div>
+    </div>
+
+    <!-- Archive View -->
+    <div id="archive" class="view">
+        <div class="container">
+            <h2 class="page-title">Archive</h2>
+            <div class="notes-grid" id="archive-grid"></div>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content note-modal-content">
+            <div class="note-modal-header">
+                <button class="icon-btn" id="pin-note-modal" title="Pin">📌</button>
+                <button class="icon-btn" id="archive-note-modal" title="Archive">🗄️</button>
+                <button class="icon-btn" id="delete-note-modal" title="Delete">🗑️</button>
+                <button class="icon-btn modal-close" id="close-note-modal">✕</button>
+            </div>
+            <input type="text" class="note-title-input" id="modal-note-title" placeholder="Title">
+            <div id="modal-checklist-container"></div>
+            <textarea class="note-content-input" id="modal-note-content" placeholder="Take a note..."></textarea>
+            <div class="note-options">
+                <div class="status-selector">
+                    <button class="status-btn" data-status="not-started" title="Not Started">⚪</button>
+                    <button class="status-btn" data-status="in-progress" title="In Progress">🟢</button>
+                    <button class="status-btn" data-status="high-priority" title="High Priority">🔴</button>
+                    <button class="status-btn" data-status="easy" title="Easy">🟤</button>
+                    <button class="status-btn" data-status="completed" title="Completed">🟡</button>
+                </div>
+                <input type="date" id="modal-note-date" class="date-picker">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="modal-note-checklist"> Checklist Mode
+                </label>
+            </div>
+            <div class="note-modal-footer">
+                <button class="btn-primary" id="save-note-btn">Save</button>
+                <span class="save-confirmation" id="save-confirmation" style="display: none;">✓ Saved!</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
-
-
